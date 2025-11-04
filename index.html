@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malaria Detector</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Malaria Cell Classifier</h1>
+
+    <input type="file" id="imageInput" accept="image/*" />
+    <button id="predictBtn">Predict</button>
+
+    <div class="result">
+      <h2 id="predictionText">Upload an image to begin</h2>
+      <img id="preview" src="" alt="Preview" />
+      <canvas id="gradcamCanvas"></canvas>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
