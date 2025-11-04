@@ -26,7 +26,7 @@ predictBtn.addEventListener("click", async () => {
   predictionText.innerText = "Analyzing...";
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/predict", {
+    const res = await fetch("https://malaria-backend-im7e.onrender.com/predict", {
       method: "POST",
       body: formData,
     });
