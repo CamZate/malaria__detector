@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Malaria Detector</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malaria Detection</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Malaria Cell Classifier</h1>
+    <h1>🧬 <span class="highlight">Malaria</span> Detection</h1>
+    <p>Upload a blood cell image to check if it's infected or uninfected.</p>
 
-    <input type="file" id="imageInput" accept="image/*" />
-    <button id="predictBtn">Predict</button>
+    <input type="file" id="imageUpload" accept="image/*">
+    <button id="predictBtn">🔍 Predict</button>
 
-    <div class="result">
-      <h2 id="predictionText">Upload an image to begin</h2>
-      <img id="preview" src="" alt="Preview" />
-      <canvas id="gradcamCanvas"></canvas>
+    <div class="image-preview">
+      <img id="preview" alt="Uploaded image" />
     </div>
+
+    <h2 id="result">Result will appear here 🧠</h2>
+
   </div>
 
+  <!-- ONNX Runtime Web -->
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
