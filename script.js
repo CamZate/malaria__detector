@@ -68,8 +68,13 @@ predictBtn.addEventListener("click", async () => {
     console.log("Output:", output);
 
     const outputTensor = Object.values(output)[0].data[0];
-    const prediction = outputTensor > 0.5 ? "🦠 Uinfected" : "✅ Infected";
-    resultEl.textContent = `Result: ${prediction} (${(outputTensor * 100).toFixed(2)}% confidence)`;
+    const prediction = outputTensor > 0.5 ? 1 : 0;
+    const predictionLabel = prediction > 0.5 ? "✅ Uninfected" : "🦠 Infected";
+    if(prediction === 1){
+      resultEl.textContent = `Result: ${predictionLabel} (${(outputTensor * 100).toFixed(2)}% confidence)`;
+    }else{
+      resultEl.textContent = `Result: ${predictionLabel} (${((1-outputTensor) * 100).toFixed(2)}% confidence)`;
+    }
   } catch (err) {
     console.error("Error during inference:", err);
     resultEl.textContent = "❌ Error running model";
