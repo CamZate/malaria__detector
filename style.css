@@ -20,6 +20,7 @@ h1 {
   color: #50fa7b;
   margin-bottom: 20px;
   align-self: left;
+  font-size: 1.5rem;
 }
 
 .card {
@@ -32,11 +33,17 @@ h1 {
   box-shadow: 0 0 100px 5px rgba(17, 103, 0, 0.2);
   outline: 2px dashed #1c1c1c; /* Blue outline */
   align-items: center;
+  transition: all 0.3s ease;
+  margin: 0px auto;
 }
 
 @media (max-width: 1000px) {
   .card {
     grid-template-columns: 1fr; /* Switch to 1 column */
+  }
+
+  h1{
+    font-size: 1.2rem;
   }
 }
 
@@ -152,4 +159,3 @@ h1 {
   text-anchor: middle;
   transform: rotate(90deg);
 }
-
