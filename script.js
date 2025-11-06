@@ -1,82 +1,83 @@
 let session;
-const fileInput = document.getElementById("imageUpload");
-const predictBtn = document.getElementById("predictBtn");
-const resultEl = document.getElementById("result");
-const preview = document.getElementById("preview");
 
 async function initModel() {
-  resultEl.textContent = "Loading model...";
-  try {
-    session = await ort.InferenceSession.create("malaria_model.onnx");
-    resultEl.textContent = "Model loaded ✅";
-  } catch (err) {
-    console.error("Model load error:", err);
-    resultEl.textContent = "❌ Failed to load model";
-  }
+  const status = document.getElementById("status");
+  status.textContent = "Loading model...";
+  session = await ort.InferenceSession.create("./malaria_model.onnx");
+  status.textContent = "> Model ready <";
 }
-initModel();
 
-// Load image preview
-fileInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      preview.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
+async function predict(image) {
+  const status = document.getElementById("status");
+  const predictionText = document.getElementById("prediction");
+  const progressPath = document.getElementById("progress-path");
+  const confidenceText = document.getElementById("confidence-text");
 
-// Convert image to Float32 tensor (64x64x3)
-async function preprocessImage(image) {
+  status.textContent = "Scanning...";
+  predictionText.textContent = "";
+  progressPath.setAttribute("stroke-dasharray", "0,100");
+
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   canvas.width = 64;
   canvas.height = 64;
   ctx.drawImage(image, 0, 0, 64, 64);
-  const imgData = ctx.getImageData(0, 0, 64, 64);
-  const { data } = imgData;
 
-  // remove alpha and normalize
+  const imageData = ctx.getImageData(0, 0, 64, 64);
+  const { data } = imageData;
+
   const input = new Float32Array(64 * 64 * 3);
-  for (let i = 0, j = 0; i < data.length; i += 4, j += 3) {
-    input[j] = data[i] / 255;     // R
-    input[j + 1] = data[i + 1] / 255; // G
-    input[j + 2] = data[i + 2] / 255; // B
+  for (let i = 0; i < 64 * 64; i++) {
+    input[i * 3 + 0] = data[i * 4 + 0] / 255;
+    input[i * 3 + 1] = data[i * 4 + 1] / 255;
+    input[i * 3 + 2] = data[i * 4 + 2] / 255;
   }
 
-  // shape [1,64,64,3]
-  return new ort.Tensor("float32", input, [1, 64, 64, 3]);
+  const tensor = new ort.Tensor("float32", input, [1, 64, 64, 3]);
+  const feeds = { input_layer_16: tensor };
+
+  const results = await session.run(feeds);
+  const output = results.output_0.data[0];
+  const confidence = (output * 100).toFixed(2);
+
+  confidenceText.textContent = `${confidence}%`;
+  
+  if (output < 0.5) {
+    predictionText.innerHTML = `INFECTED<br><span style="font-size: 1rem; color: #6d6d6dff;">(${(100 - confidence).toFixed(2)}% confidence)</span>`;
+    predictionText.style.color = "#ff4b4b";
+    progressPath.setAttribute("stroke-dasharray", `${100-confidence},100`);
+    progressPath.setAttribute("stroke", "#ff4b4b");
+  } else {
+    predictionText.innerHTML = `UNINFECTED<br><span style="font-size: 1rem; color: #6d6d6dff;">(${confidence}% confidence)</span>`;
+    predictionText.style.color = "#50fa7b";
+    progressPath.setAttribute("stroke-dasharray", `${confidence},100`);
+    progressPath.setAttribute("stroke", "#50fa7b");
+  }
+
+  status.textContent = "Prediction complete.";
 }
 
-predictBtn.addEventListener("click", async () => {
-  if (!fileInput.files.length) return alert("Please upload an image first!");
-  resultEl.textContent = "Predicting... 🧠";
-
-  const img = document.createElement("img");
-  img.src = preview.src;
-  await new Promise((res) => (img.onload = res));
-
-  const inputTensor = await preprocessImage(img);
-
-  const feeds = { input_layer_16: inputTensor };
-  console.log("Running model with feeds:", feeds);
-
-  try {
-    const output = await session.run(feeds);
-    console.log("Output:", output);
-
-    const outputTensor = Object.values(output)[0].data[0];
-    const prediction = outputTensor > 0.5 ? 1 : 0;
-    const predictionLabel = prediction > 0.5 ? "✅ Uninfected" : "🦠 Infected";
-    if(prediction === 1){
-      resultEl.textContent = `Result: ${predictionLabel} (${(outputTensor * 100).toFixed(2)}% confidence)`;
-    }else{
-      resultEl.textContent = `Result: ${predictionLabel} (${((1-outputTensor) * 100).toFixed(2)}% confidence)`;
-    }
-  } catch (err) {
-    console.error("Error during inference:", err);
-    resultEl.textContent = "❌ Error running model";
-  }
+document.getElementById("fileInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  fileName = file ? file.name : "No file selected";
+  document.getElementById('file-name').textContent = fileName;
+  if (!file) return;
+  const img = new Image();
+  const reader = new FileReader();
+  reader.onload = function (ev) {
+    img.onload = function () {
+      const canvas = document.getElementById("imageCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+      const x = (canvas.width - img.width * scale) / 2;
+      const y = (canvas.height - img.height * scale) / 2;
+      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+      predict(img);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
 });
+
+initModel();

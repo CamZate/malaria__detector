@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Malaria Detection</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malaria Detector AI</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>🧬 <span class="highlight">Malaria</span> Detection</h1>
-    <p>Upload a blood cell image to check if it's infected or uninfected.</p>
+    <h1> # Malaria Cell Classifier</h1>
 
-    <input type="file" id="imageUpload" accept="image/*">
-    <button id="predictBtn">🔍 Predict</button>
+    <div class="card">
+      <div class="upload-section">
+        <input type="file" id="fileInput" accept="image/*">
+        <label for="fileInput" class="upload-btn">CHOOSE AN IMAGE</label>
+        <div id="file-name" class="file-name">No file selected</div>
+        <canvas id="imageCanvas"></canvas>
+      </div>
 
-    <div class="image-preview">
-      <img id="preview" alt="Uploaded image" />
+      <div class="output-section">
+        <div id="status">Select an image to begin</div>
+        <div class="gauge">
+          <svg viewBox="0 0 36 36">
+            <path class="bg"
+              d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="progress" id="progress-path"
+              stroke-dasharray="0,100"
+              d="M18 2.0845
+                 a 15.9155 15.9155 0 0 1 0 31.831
+                 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <text x="18" y="20.35" id="confidence-text">0%</text>
+          </svg>
+        </div>
+        <div id="prediction"></div>
+      </div>
     </div>
-
-    <h2 id="result">Result will appear here 🧠</h2>
-
   </div>
 
-  <!-- ONNX Runtime Web -->
-  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

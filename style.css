@@ -1,7 +1,10 @@
 body {
-  font-family: "Poppins", sans-serif;
-  background: #0b0c10;
-  color: #c5c6c7;
+  background: repeating-linear-gradient(90deg, #121212, #121212 1px, transparent 1px, transparent 20px),
+              repeating-linear-gradient(0deg, #121212, #121212 1px, transparent 1px, transparent 20px);
+  background-size: 200px 200px;
+  background-color: #020202;  /* Dark background color for contrast */
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,64 +13,136 @@ body {
 }
 
 .container {
-  background: #1f2833;
-  padding: 30px 40px;
-  border-radius: 20px;
-  box-shadow: 0 0 30px rgba(0, 255, 180, 0.2);
-  text-align: center;
-  max-width: 400px;
+  text-align: left;
 }
 
 h1 {
-  font-size: 2rem;
-  color: #66fcf1;
-  margin-bottom: 10px;
+  color: #50fa7b;
+  margin-bottom: 20px;
+  align-self: left;
 }
 
-.highlight {
-  color: #45a29e;
+.card {
+  display: grid; /* Use grid layout */
+  grid-template-columns: 1fr 1fr; /* Create two equal columns */
+  gap: 20px;
+  background: #000000;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 100px 5px rgba(17, 103, 0, 0.2);
+  outline: 2px dashed #1c1c1c; /* Blue outline */
+  align-items: center;
 }
 
-p {
-  font-size: 0.9rem;
-  margin-bottom: 15px;
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px; /* Adds space between the elements */
 }
 
-input[type="file"] {
+.upload-section input[type="file"] {
+  display: none; /* Hide the default file input button */
+}
+
+.upload-btn {
+  background-color: #000000; /* Button background color */
+  color: white; /* Button text color */
+  font-weight: bold;
+  padding: 10px 20px; /* Add padding for button size */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Cursor changes to a pointer on hover */
+  outline: 2px solid #1c1c1c;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.upload-btn:hover {
+  background-color: #0d0d0d; /* Darker shade on hover */
+}
+
+.file-name {
+  font-size: 12px;
+  color: #333; /* Dark text for the file name */
+  font-family: Arial, sans-serif; /* A clean font */
+  font-style: italic;
+  text-align: left; /* Centers the file name */
+  width: 200px; /* Fixed width for the file name container */
+  white-space: nowrap; /* Prevents the text from wrapping to a new line */
+  overflow: hidden; /* Hides the overflowing content */
+  text-overflow: ellipsis; /* Adds the ellipsis (...) */
+}
+
+/* Optional: Add a success style for the selected file name */
+.upload-section .selected-file {
+  display: block;
+  font-size: 14px;
+  color: #27ae60; /* Green color to indicate success */
+}
+
+
+#fileInput {
+  margin-bottom: 20px;
+}
+
+#imageCanvas {
+  width: 256px;
+  height: 256px;
+  border-radius: 10px;
+  border: 2px solid #50fa7b;
+  object-fit: cover;
+  background-color: #2a2a2d;
+}
+
+
+
+.output-section {
+  text-align: center;
+}
+
+#status {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  color: #aaa;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+#prediction {
+  font-size: 1.5rem;
+  font-weight: bold;
   margin-top: 10px;
 }
 
-button {
-  margin-top: 15px;
-  background-color: #45a29e;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
+.gauge {
+  width: 120px;
+  height: 120px;
+  margin: 10px auto;
 }
 
-button:hover {
-  background-color: #66fcf1;
-  color: #0b0c10;
+.gauge svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
 }
 
-.image-preview img {
-  margin-top: 20px;
-  max-width: 100%;
-  border-radius: 10px;
+.bg {
+  fill: none;
+  stroke: #2a2a2d;
+  stroke-width: 3;
 }
 
-h2 {
-  margin-top: 20px;
-  color: #fff;
-  font-weight: 600;
+.progress {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
 }
 
-footer {
-  margin-top: 20px;
-  font-size: 0.8rem;
-  color: #888;
+#confidence-text {
+  fill: #5a5a5a;
+  font-style: italic;
+  font-size: 0.5em;
+  text-anchor: middle;
+  transform: rotate(90deg);
 }
