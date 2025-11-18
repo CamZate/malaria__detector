@@ -58,6 +58,7 @@ async function predict(image) {
 }
 
 document.getElementById("fileInput").addEventListener("change", (e) => {
+  const status = document.getElementById("status");
   const file = e.target.files[0];
   fileName = file ? file.name : "No file selected";
   document.getElementById('file-name').textContent = fileName;
@@ -66,6 +67,11 @@ document.getElementById("fileInput").addEventListener("change", (e) => {
   const reader = new FileReader();
   reader.onload = function (ev) {
     img.onload = function () {
+      if (img.width > 400 || img.height > 400) {
+        status.textContent = "Please upload cell image";
+        e.target.value = "";
+        return;
+      }
       const canvas = document.getElementById("imageCanvas");
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
